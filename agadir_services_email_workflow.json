@@ -1,52 +1,49 @@
 {
-  "name": "Agadir Services Email Workflow",
+  "name": "Send Services Email",
   "nodes": [
     {
       "parameters": {
-        "path": "/path/to/agadir_hotels_restaurants_realestate_construction.csv",
-        "options": {}
+        "values": {
+          "string": [
+            {
+              "name": "email",
+              "value": "windidi805@gmail.com,alialuma868@gmail.com"
+            },
+            {
+              "name": "subject",
+              "value": "عرض خدمات الألمنيوم"
+            },
+            {
+              "name": "body",
+              "value": "&lt;h1&gt;مرحبا&lt;/h1&gt;&lt;p&gt;نقدم لكم أفضل خدمات الألمنيوم: مطابخ، نوافذ، أبواب وخزانات.&lt;/p&gt;&lt;p&gt;للتواصل: 0672501812&lt;/p&gt;"
+            }
+          ]
+        }
       },
-      "name": "Read CSV",
-      "type": "n8n-nodes-base.readCSV",
+      "name": "Set Email Data",
+      "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [250, 300]
     },
     {
       "parameters": {
-        "smtp": "Gmail SMTP", 
         "fromEmail": "hdm8939@gmail.com",
-        "toEmail": "={{$json["Email"]}}",
-        "subject": "عرض خدماتنا في البناء والعقارات",
-        "text": "السلام عليكم،\n\nنقدم لكم أفضل الخدمات في مجال البناء، العقارات، الفنادق والمطاعم.\n\nللتواصل: 0672501812"
+        "toEmail": "={{$json[\"email\"]}}",
+        "subject": "={{$json[\"subject\"]}}",
+        "text": "={{$json[\"body\"]}}",
+        "options": {}
       },
       "name": "Send Email",
-      "type": "n8n-nodes-base.emailSend",
+      "type": "n8n-nodes-base.gmail",
       "typeVersion": 1,
-      "position": [650, 300]
-    },
-    {
-      "parameters": {
-        "time": 10
-      },
-      "name": "Wait",
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
-      "position": [450, 300]
+      "position": [500, 300],
+      "credentials": {
+        "gmailOAuth2Api": "Gmail Account"
+      }
     }
   ],
   "connections": {
-    "Read CSV": {
-      "main": [
-        [
-          {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait": {
+    "Set Email Data": {
       "main": [
         [
           {
@@ -57,5 +54,5 @@
         ]
       ]
     }
-  }
+  ]
 }
